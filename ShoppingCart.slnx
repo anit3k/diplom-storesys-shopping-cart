@@ -1,3 +1,12 @@
 <Solution>
-  <Project Path="ShoppingCart/ShoppingCart.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/ShoppingCart.API/ShoppingCart.API.csproj" />
+    <Project Path="src/ShoppingCart.Application/ShoppingCart.Application.csproj" />
+    <Project Path="src/ShoppingCart.Domain/ShoppingCart.Domain.csproj" />
+    <Project Path="src/ShoppingCart.Infrastructure/ShoppingCart.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ShoppingCart.Application.Tests/ShoppingCart.Application.Tests.csproj" />
+    <Project Path="tests/ShoppingCart.Domain.Tests/ShoppingCart.Domain.Tests.csproj" />
+  </Folder>
 </Solution>
