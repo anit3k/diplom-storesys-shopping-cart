@@ -6,14 +6,14 @@ namespace ShoppingCart.Application.UseCases.RemoveItemsFromCart;
 public class RemoveItemsFromCartHandler
 {
     private readonly ICartRepository cartRepository;
-    private readonly IEventPublisher eventPublisher;
+    private readonly IEventStore _eventStore;
 
     public RemoveItemsFromCartHandler(
         ICartRepository cartRepository,
-        IEventPublisher eventPublisher)
+        IEventStore eventStore)
     {
         this.cartRepository = cartRepository;
-        this.eventPublisher = eventPublisher;
+        this._eventStore = eventStore;
     }
 
     public Cart Handle(RemoveItemsFromCartCommand command)
@@ -25,7 +25,7 @@ public class RemoveItemsFromCartHandler
         this.cartRepository.Save(cart);
 
         foreach (var productId in command.ProductCatalogueIds)
-            this.eventPublisher.Publish("CartItemRemoved", new { command.UserId, productId });
+            this._eventStore.Append("CartItemRemoved", new { command.UserId, productId });
 
         return cart;
     }

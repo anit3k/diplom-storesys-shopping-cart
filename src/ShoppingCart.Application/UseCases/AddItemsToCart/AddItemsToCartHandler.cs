@@ -7,16 +7,16 @@ public class AddItemsToCartHandler
 {
     private readonly ICartRepository cartRepository;
     private readonly IProductCatalogClient productCatalogClient;
-    private readonly IEventPublisher eventPublisher;
+    private readonly IEventStore _eventStore;
 
     public AddItemsToCartHandler(
         ICartRepository cartRepository,
         IProductCatalogClient productCatalogClient,
-        IEventPublisher eventPublisher)
+        IEventStore eventStore)
     {
         this.cartRepository = cartRepository;
         this.productCatalogClient = productCatalogClient;
-        this.eventPublisher = eventPublisher;
+        this._eventStore = eventStore;
     }
 
     public async Task<Cart> Handle(AddItemsToCartCommand command)
@@ -32,7 +32,7 @@ public class AddItemsToCartHandler
         this.cartRepository.Save(cart);
 
         foreach (var item in itemsList)
-            this.eventPublisher.Publish("CartItemAdded", new { command.UserId, item });
+            this._eventStore.Append("CartItemAdded", new { command.UserId, item });
 
         return cart;
     }
