@@ -1,0 +1,102 @@
+{
+  "info": {
+    "name": "ShoppingCart API",
+    "description": "Requests for testing the ShoppingCart microservice (chapter 2 - diplom store systemer projekt).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5087",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get Cart",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cart/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "{{userId}}"]
+        },
+        "description": "Fetch the current cart for a user. Returns an empty cart if the user has no cart yet."
+      },
+      "response": []
+    },
+    {
+      "name": "Add Items To Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[1, 2, 3]"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cart/{{userId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "{{userId}}", "items"]
+        },
+        "description": "Add a list of product catalogue IDs to the user's cart."
+      },
+      "response": []
+    },
+    {
+      "name": "Remove Items From Cart",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[1]"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cart/{{userId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "{{userId}}", "items"]
+        },
+        "description": "Remove a list of product catalogue IDs from the user's cart."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Events",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cart/events?from=0",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "events"],
+          "query": [
+            {
+              "key": "from",
+              "value": "0",
+              "description": "Sequence number to read events from (inclusive)."
+            }
+          ]
+        },
+        "description": "Read published events (CartItemAdded, CartItemRemoved) from the given sequence number onward. Other microservices would poll this endpoint."
+      },
+      "response": []
+    }
+  ]
+}
