@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 
 // DI Ports -> Infrastructure implementations
 builder.Services.AddSingleton<ICartRepository, InMemoryCartRepository>();
-builder.Services.AddSingleton<IProductCatalogClient, FakeProductCatalogClient>();
+builder.Services.AddHttpClient<IProductCatalogClient, ProductCatalogClient>();
 builder.Services.AddSingleton<IEventStore, InMemoryEventStore>();
 
 // DI Use case handlers
