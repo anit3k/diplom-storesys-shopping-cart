@@ -85,3 +85,7 @@ shopping-cart/
 - **No persistence** — `InMemoryCartRepository` and `InMemoryEventStore` lose all data on restart. Acceptable for this stage of the course; revisited when the book covers data storage (chapter 6).
 - **No resilience policies** — HTTP calls to the Product Catalog gist have no retry, timeout, or circuit breaker yet. Deliberately deferred to align with the book's own introduction of Polly in chapter 7.
 - **No authentication/authorization** — not yet covered by the book at this stage (chapter 10).
+
+## AI transparency -> AI-assisted development 
+ 
+This project was developed as a form of pair programming with **Claude Sonnet 5** (Anthropic), used via chat on "low" reasoning effort. Claude was used to discuss architectural decisions, generate code based on decisions made together, and write ADRs, diagrams, and other documentation — but all decisions, review, and understanding of the code remain the author's own responsibility, in line with the requirements of a diploma education.
