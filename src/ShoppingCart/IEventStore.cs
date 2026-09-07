@@ -1,4 +1,4 @@
-namespace ShoppingCart.Application.Ports;
+namespace ShoppingCart;
 
 public interface IEventStore
 {

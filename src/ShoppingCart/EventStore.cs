@@ -1,9 +1,8 @@
 using System.Collections.Concurrent;
-using ShoppingCart.Application.Ports;
 
-namespace ShoppingCart.Infrastructure;
+namespace ShoppingCart;
 
-public class InMemoryEventStore : IEventStore
+public class EventStore : IEventStore
 {
     private readonly ConcurrentQueue<Event> events = new();
     private long nextSequenceNumber = 1;

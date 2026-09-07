@@ -1,11 +1,9 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
-using ShoppingCart.Application.Ports;
-using ShoppingCart.Domain;
 
-namespace ShoppingCart.Infrastructure;
+namespace ShoppingCart;
 
-public class ProductCatalogClient : IProductCatalogClient
+public class ProductCatalogClient
 {
     private const string ProductCatalogUrl =
         "https://gist.githubusercontent.com/anit3k/cf11fd86dce483e3963f13d5d30122ae/raw/products.json";
@@ -21,7 +19,7 @@ public class ProductCatalogClient : IProductCatalogClient
         this.client = client;
     }
 
-    public async Task<IEnumerable<CartItem>> GetCartItems(int[] productCatalogIds)
+    public async Task<IEnumerable<ShoppingCartItem>> GetCartItems(int[] productCatalogIds)
     {
         var response = await this.client.GetAsync(string.Empty);
         response.EnsureSuccessStatusCode();
@@ -32,7 +30,7 @@ public class ProductCatalogClient : IProductCatalogClient
 
         return products
             .Where(p => productCatalogIds.Contains(p.ProductId))
-            .Select(p => new CartItem(
+            .Select(p => new ShoppingCartItem(
                 p.ProductId,
                 p.ProductName,
                 p.ProductDescription,
