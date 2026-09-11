@@ -45,11 +45,4 @@ public class ShoppingCartController : ControllerBase
         this.shoppingCartStore.Save(cart);
         return this.Ok(cart);
     }
-
-    [HttpGet("events")]
-    public IActionResult GetEvents([FromQuery] long from = 0)
-    {
-        var events = this.eventStore.GetEventsFrom(from);
-        return this.Ok(events);
-    }
 }

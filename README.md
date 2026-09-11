@@ -11,7 +11,8 @@ This project implements the book's Shopping Cart microservice example (chapter 2
 The service is a **single ASP.NET Core project** (`src/ShoppingCart`) with all source files in one place, exactly as the book builds it in chapter 2. There is no Domain/Application/Infrastructure/API split:
 
 - **Domain types** — `ShoppingCart`, `ShoppingCartItem`, `Money`. The `ShoppingCart` domain object raises its own events (`AddItems`/`RemoveItems` take an `IEventStore` and append events directly).
-- **`ShoppingCartController`** — does all orchestration inline (get cart, call product catalog, save, read events). No separate use-case/handler classes.
+- **`ShoppingCartController`** — does all orchestration inline (get cart, call product catalog, save). No separate use-case/handler classes.
+- **`EventFeedController`** — exposes the readable event feed (`GET /events`) that other microservices poll, kept separate from the cart controller so each controller has a single responsibility.
 - **`ProductCatalogClient`** — an HTTP client used as a concrete class, with no port interface around it.
 - **`IShoppingCartStore` / `InMemoryShoppingCartStore`** and **`IEventStore` / `EventStore`** — thin storage interfaces plus in-memory implementations. The interfaces are kept only so DI registration reads naturally, as the book itself does.
 - **`Program.cs`** — dependency injection wiring for the concrete classes.
@@ -44,7 +45,7 @@ The API will start on a local port shown in the console output (e.g. `http://loc
 | `GET` | `/cart/{userId}` | Get a user's cart (creates an empty one if none exists) |
 | `POST` | `/cart/{userId}/items` | Add items to a user's cart. Body: array of product IDs, e.g. `[1, 2, 3]` |
 | `DELETE` | `/cart/{userId}/items` | Remove items from a user's cart. Body: array of product IDs |
-| `GET` | `/cart/events?from={sequenceNumber}` | Read published events from a given sequence number onward |
+| `GET` | `/events?from={sequenceNumber}` | Read published events from a given sequence number onward |
 
 ## Testing the API
 
@@ -80,7 +81,8 @@ shopping-cart/
         ├── ShoppingCart.cs              (domain object; raises its own events)
         ├── ShoppingCartItem.cs
         ├── Money.cs
-        ├── ShoppingCartController.cs    (all orchestration inline)
+        ├── ShoppingCartController.cs    (cart orchestration inline)
+        ├── EventFeedController.cs       (readable event feed endpoint)
         ├── ProductCatalogClient.cs      (concrete, no interface)
         ├── IShoppingCartStore.cs
         ├── InMemoryShoppingCartStore.cs

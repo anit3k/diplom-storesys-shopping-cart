@@ -13,7 +13,8 @@ source files live directly in one project.
 ```mermaid
 graph TD
     subgraph Project["ShoppingCart (single ASP.NET Core project)"]
-        Controller["ShoppingCartController<br/><i>all orchestration inline</i>"]
+        Controller["ShoppingCartController<br/><i>cart orchestration inline</i>"]
+        EventFeed["EventFeedController<br/><i>GET /events feed</i>"]
         Domain["ShoppingCart, ShoppingCartItem, Money<br/><i>domain types; events raised from AddItems/RemoveItems</i>"]
         Store["IShoppingCartStore / InMemoryShoppingCartStore"]
         Events["IEventStore / EventStore, Event"]
@@ -24,6 +25,7 @@ graph TD
         Controller --> Catalog
         Controller --> Domain
         Controller --> Events
+        EventFeed --> Events
         Domain --> Events
         Catalog --> Domain
         Store --> Domain
@@ -38,6 +40,7 @@ graph TD
     style Events fill:#2d4a5a,stroke:#60a5fa,color:#fff
     style Catalog fill:#5a4a2d,stroke:#fbbf24,color:#fff
     style Controller fill:#4a2d5a,stroke:#c084fc,color:#fff
+    style EventFeed fill:#4a2d5a,stroke:#c084fc,color:#fff
     style Program fill:#4a2d5a,stroke:#c084fc,color:#fff
     style ExternalGist fill:#333,stroke:#999,color:#fff
 ```
@@ -45,7 +48,7 @@ graph TD
 ## Notes
 
 - **One project, no layer boundaries.** Everything compiles into a single assembly. Types reference each other directly, without project references or a dependency-inversion boundary between "application" and "infrastructure".
-- **The controller orchestrates directly.** `ShoppingCartController` fetches the cart, calls `ProductCatalogClient`, mutates the domain object, saves it, and reads events — there are no separate use-case/handler classes.
+- **The controllers orchestrate directly.** `ShoppingCartController` fetches the cart, calls `ProductCatalogClient`, mutates the domain object, and saves it — there are no separate use-case/handler classes. The readable event feed is split into `EventFeedController` (`GET /events`) so cart operations and the feed each have a single responsibility.
 - **The domain raises its own events.** `ShoppingCart.AddItems`/`RemoveItems` take an `IEventStore` and append events themselves, rather than an Application layer doing it (contrast with ADR-0002 on `main`).
 - **`ProductCatalogClient` is used as a concrete class** — no `IProductCatalogClient` port. `IShoppingCartStore` and `IEventStore` are kept only as thin interfaces so the DI registration reads naturally, as the book itself does.
 - **No test projects** on this branch — the book's chapter 2 layout is a single project, and the two (empty) test projects were removed here to keep the flat structure faithful. The Clean Architecture branch keeps them.

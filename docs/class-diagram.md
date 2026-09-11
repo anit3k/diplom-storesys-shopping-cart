@@ -94,6 +94,10 @@ classDiagram
         +Get(int userId) IActionResult
         +AddItems(int userId, int[] productIds) Task~IActionResult~
         +RemoveItems(int userId, int[] productIds) IActionResult
+    }
+
+    class EventFeedController {
+        -IEventStore eventStore
         +GetEvents(long from) IActionResult
     }
 
@@ -101,13 +105,14 @@ classDiagram
     ShoppingCartController --> ProductCatalogClient
     ShoppingCartController --> IEventStore
     ShoppingCartController ..> ShoppingCart
+    EventFeedController --> IEventStore
 ```
 
 ## Notes
 
 - **Records** (`ShoppingCartItem`, `Money`, `Event`) use the `<<record>>` stereotype — immutable, data-carrying types.
 - **The domain object raises its own events.** `ShoppingCart.AddItems`/`RemoveItems` receive an `IEventStore` and append `CartItemAdded`/`CartItemRemoved` events directly. There is no separate Application layer between the controller and the domain (contrast with the Clean Architecture branch, ADR-0002).
-- **The controller does all orchestration inline** — it depends directly on the store, the product catalog client, and the event store, with no use-case/handler classes in between.
+- **The controllers do all orchestration inline** — `ShoppingCartController` depends directly on the store, the product catalog client, and the event store, with no use-case/handler classes in between. The event feed is split into its own `EventFeedController` (`GET /events`) so each controller keeps a single responsibility.
 - **`ProductCatalogClient` has no interface** — the controller depends on the concrete class. Only `IShoppingCartStore` and `IEventStore` are kept as thin interfaces, matching the book, so DI registration reads naturally.
 - **`ShoppingCart` and its namespace share the name `ShoppingCart`** (the project's root namespace) — this is exactly how the book structures it; C# resolves the type within the namespace without conflict.
 - Multiplicity `ShoppingCart "1" o-- "many" ShoppingCartItem` reflects that a cart aggregates zero or more items (backed by a `HashSet<ShoppingCartItem>` in the implementation).
