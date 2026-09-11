@@ -47,7 +47,7 @@ numbers using `Interlocked.Increment` to remain correct under concurrent
 requests.
 
 A new use case, `GetEventsHandler`, exposes this through a
-`GET /cart/events?from={sequenceNumber}` endpoint, so other microservices
+`GET /events?from={sequenceNumber}` endpoint, so other microservices
 can poll the Shopping Cart API directly — matching the book's intent of an
 HTTP-based event feed.
 

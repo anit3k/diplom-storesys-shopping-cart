@@ -149,17 +149,20 @@ classDiagram
         -GetCartHandler getCartHandler
         -AddItemsToCartHandler addItemsToCartHandler
         -RemoveItemsFromCartHandler removeItemsFromCartHandler
-        -GetEventsHandler getEventsHandler
         +Get(int userId) IActionResult
         +AddItems(int userId, int[] productIds) Task~IActionResult~
         +RemoveItems(int userId, int[] productIds) IActionResult
+    }
+
+    class EventsController {
+        -GetEventsHandler getEventsHandler
         +GetEvents(long from) IActionResult
     }
 
     CartController --> GetCartHandler
     CartController --> AddItemsToCartHandler
     CartController --> RemoveItemsFromCartHandler
-    CartController --> GetEventsHandler
+    EventsController --> GetEventsHandler
 ```
 
 ## Notes
@@ -167,5 +170,5 @@ classDiagram
 - **Records** (`CartItem`, `Money`, `Event`, and all Commands/Queries) are shown with the `<<record>>` stereotype — they are immutable, data-carrying types.
 - **Interfaces** (`ICartRepository`, `IProductCatalogClient`, `IEventStore`) are the *ports* defined in the Application layer (ADR-0001). The `..|>` arrows show Infrastructure classes implementing them.
 - **Use case handlers** depend only on the ports (interfaces), never on the concrete Infrastructure classes — this is the Dependency Inversion Principle in action.
-- `CartController` (API layer) depends only on the four use case handlers, keeping it thin — it has no direct knowledge of `Cart`, the ports, or their implementations.
+- The API layer has two thin controllers: `CartController` depends only on the three cart use case handlers, and `EventsController` depends only on `GetEventsHandler`. Neither has direct knowledge of `Cart`, the ports, or their implementations. Splitting the event feed into its own controller keeps each controller focused on a single responsibility and exposes the events feed under its own `/events` route.
 - Multiplicity `Cart "1" o-- "many" CartItem` reflects that a cart aggregates zero or more items (backed by a `HashSet<CartItem>` in the implementation).

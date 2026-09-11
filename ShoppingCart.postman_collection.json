@@ -83,9 +83,9 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseUrl}}/cart/events?from=0",
+          "raw": "{{baseUrl}}/events?from=0",
           "host": ["{{baseUrl}}"],
-          "path": ["cart", "events"],
+          "path": ["events"],
           "query": [
             {
               "key": "from",

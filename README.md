@@ -11,7 +11,7 @@ The service is split into four projects, following Clean Architecture's dependen
 - **`ShoppingCart.Domain`** — Entities and value objects (`Cart`, `CartItem`, `Money`). No dependencies on any other project.
 - **`ShoppingCart.Application`** — Use cases (`AddItemsToCart`, `GetCart`, `RemoveItemsFromCart`, `GetEvents`) and ports (interfaces) describing what the application needs from the outside world.
 - **`ShoppingCart.Infrastructure`** — Implementations of the Application ports: an in-memory cart repository, an HTTP-based product catalog client, and an in-memory event store.
-- **`ShoppingCart.API`** — ASP.NET Core controllers and dependency injection wiring.
+- **`ShoppingCart.API`** — ASP.NET Core controllers (`CartController` for cart operations, `EventsController` for the event feed) and dependency injection wiring.
 
 See [`docs/package-diagram.md`](docs/package-diagram.md) for a diagram of the project structure, and [`docs/class-diagram.md`](docs/class-diagram.md) for the detailed class relationships.
 
@@ -41,7 +41,7 @@ The API will start on a local port shown in the console output (e.g. `http://loc
 | `GET` | `/cart/{userId}` | Get a user's cart (creates an empty one if none exists) |
 | `POST` | `/cart/{userId}/items` | Add items to a user's cart. Body: array of product IDs, e.g. `[1, 2, 3]` |
 | `DELETE` | `/cart/{userId}/items` | Remove items from a user's cart. Body: array of product IDs |
-| `GET` | `/cart/events?from={sequenceNumber}` | Read published events from a given sequence number onward |
+| `GET` | `/events?from={sequenceNumber}` | Read published events from a given sequence number onward |
 
 ## Testing the API
 
