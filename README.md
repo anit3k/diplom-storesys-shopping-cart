@@ -34,6 +34,24 @@ dotnet run --project src\ShoppingCart.API
 
 The API will start on a local port shown in the console output (e.g. `http://localhost:5087`).
 
+### Running with Docker
+
+A [`ShoppingCart.dockerfile`](ShoppingCart.dockerfile) is included. It uses a multi-stage build (SDK image to build and publish, ASP.NET runtime image to run) and runs as the image's built-in non-root `app` user.
+
+Build the image from the repository root:
+
+```bash
+docker build -f ShoppingCart.dockerfile -t shopping-cart .
+```
+
+Run the container:
+
+```bash
+docker run --rm -p 5087:8080 shopping-cart
+```
+
+Inside the container Kestrel listens on port `8080` (the .NET runtime image default). The `-p 5087:8080` mapping publishes it on host port `5087`, so the API is reachable at `http://localhost:5087` — the same port as `dotnet run`, meaning the Postman collection works unchanged. Map a different host port with e.g. `-p 5000:8080` if 5087 is taken.
+
 ### Endpoints
 
 | Method | Route | Description |
@@ -60,6 +78,7 @@ Product information is fetched from a static [GitHub Gist](https://gist.github.c
 ```
 shopping-cart/
 ├── ShoppingCart.slnx
+├── ShoppingCart.dockerfile
 ├── ShoppingCart.postman_collection.json
 ├── docs/
 │   ├── adr/
